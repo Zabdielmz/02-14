@@ -218,8 +218,11 @@ button {
 }
 
 .card-content {
-    position: relative;
-    z-index: 2;
+   position: relative; /* Fundamental para que funcione el z-index */
+    z-index: 10;        /* Un número alto para ganarle al ::before */
+    width: 100%;
+    padding: 20px;
+    pointer-events: none;
 }
 
 .memory-card h3, .memory-card p {
@@ -264,5 +267,6 @@ button {
         min-height: 300px;
     }
 }
+
 
 
