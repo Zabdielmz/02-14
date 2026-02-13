@@ -10,6 +10,7 @@
     --glass-border: rgba(100, 200, 255, 0.2);
 }
 
+/* --- Reset General --- */
 * {
     margin: 0;
     padding: 0;
@@ -18,15 +19,14 @@
 
 body {
     font-family: 'Montserrat', sans-serif;
-    background: var(--bg-gradient);
+    background: var(--bg-dark);
     min-height: 100vh;
     color: var(--text-light);
-    /* Permitimos scroll horizontal si es absolutamente necesario en móviles muy pequeños al separarse los botones */
-    overflow-x: auto; 
+    overflow-x: hidden; /* Evita barras de scroll raras al mover botones */
     position: relative;
 }
 
-/* --- Fondo de Estrellas (AUMENTADO) --- */
+/* --- Fondo de Estrellas --- */
 .stars-container {
     position: fixed;
     top: 0;
@@ -34,7 +34,7 @@ body {
     width: 100%;
     height: 100%;
     z-index: -1;
-    background: radial-gradient(ellipse at bottom, #0a1128 0%, #000 100%);
+    background: var(--bg-gradient);
     overflow: hidden;
 }
 
@@ -46,55 +46,27 @@ body {
     animation: animStar 100s linear infinite;
 }
 
-/* Capa 1: Estrellas diminutas (Efecto polvo cósmico)
-   He añadido muchísimas coordenadas para saturar el fondo
-*/
 #stars {
     width: 1px;
     height: 1px;
     box-shadow: 
         100px 200px #FFF, 400px 500px #FFF, 800px 100px #FFF, 1200px 800px #FFF, 1500px 300px #FFF,
         250px 700px #FFF, 900px 400px #FFF, 1300px 100px #FFF, 50px 900px #FFF, 1700px 500px #FFF,
-        300px 150px #FFF, 600px 850px #FFF, 1100px 250px #FFF, 1400px 700px #FFF, 1800px 50px #FFF,
-        150px 350px #FFF, 750px 50px #FFF, 1000px 650px #FFF, 1600px 900px #FFF, 200px 800px #FFF,
-        450px 100px #FFF, 850px 550px #FFF, 1250px 400px #FFF, 550px 300px #FFF, 950px 750px #FFF,
-        50px 50px #FFF, 1350px 250px #FFF, 1750px 850px #FFF, 400px 400px #FFF, 700px 700px #FFF,
-        220px 110px #FFF, 640px 320px #FFF, 890px 430px #FFF, 1120px 560px #FFF, 1430px 210px #FFF,
-        340px 920px #FFF, 560px 450px #FFF, 780px 120px #FFF, 910px 870px #FFF, 1240px 330px #FFF,
-        150px 610px #FFF, 380px 240px #FFF, 670px 780px #FFF, 940px 520px #FFF, 1310px 940px #FFF;
+        340px 920px #FFF, 560px 450px #FFF, 780px 120px #FFF, 1310px 940px #FFF, 150px 610px #FFF;
 }
 
-/* Capa 2: Estrellas medianas */
 #stars2 {
     width: 2px;
     height: 2px;
-    box-shadow: 
-        200px 400px #FFF, 600px 100px #FFF, 1000px 700px #FFF, 1400px 300px #FFF,
-        350px 800px #FFF, 750px 250px #FFF, 1150px 950px #FFF, 1550px 450px #FFF,
-        100px 600px #FFF, 500px 200px #FFF, 900px 850px #FFF, 1300px 50px #FFF,
-        1700px 750px #FFF, 250px 50px #FFF, 650px 900px #FFF, 1050px 350px #FFF;
+    box-shadow: 200px 400px #FFF, 600px 100px #FFF, 1000px 700px #FFF, 1400px 300px #FFF;
     animation-duration: 150s;
 }
 
-/* Capa 3: Estrellas brillantes */
 #stars3 {
     width: 3px;
     height: 3px;
-    box-shadow: 
-        400px 600px #FFF, 900px 200px #FFF, 1400px 800px #FFF, 
-        200px 100px #FFF, 700px 900px #FFF, 1200px 400px #FFF, 
-        1700px 100px #FFF, 500px 500px #FFF;
+    box-shadow: 400px 600px #FFF, 900px 200px #FFF, 1400px 800px #FFF;
     animation-duration: 200s;
-}
-
-/* Nebulosa de fondo para dar profundidad */
-.stars-container::after {
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle at 50% 50%, rgba(0, 210, 255, 0.08), transparent 70%);
-    pointer-events: none;
 }
 
 @keyframes animStar {
@@ -122,6 +94,7 @@ body {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     margin-bottom: 1rem;
+    text-align: center;
 }
 
 .sub-title {
@@ -129,10 +102,13 @@ body {
     font-weight: 300;
     margin-bottom: 3rem;
     color: var(--text-dim);
+    text-align: center;
 }
 
+/* --- Tarjeta de Cristal --- */
 .glass-card {
-    display: flexbox;
+    display: flex; /* CORREGIDO: de flexbox a flex */
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     background: var(--glass-bg);
@@ -145,20 +121,15 @@ body {
     transition: all 0.3s ease;
 }
 
-.intro-text{
-    margin-bottom: 20px;
-}
-
 /* --- Botones --- */
 .buttons-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    /* Aumentamos el gap inicial un poco */
     gap: 30px; 
     margin-top: 30px;
     min-height: 150px;
-    flex-wrap: wrap; /* Importante para que bajen si no caben */
+    flex-wrap: wrap;
 }
 
 button {
@@ -168,9 +139,8 @@ button {
     padding: 14px 35px;
     border-radius: 50px;
     cursor: pointer;
-    /* Transición suave para margen y transformación */
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    white-space: nowrap; /* Evita que el texto se rompa */
+    white-space: nowrap;
 }
 
 .glow-on-hover {
@@ -178,7 +148,7 @@ button {
     color: #fff;
     background: linear-gradient(45deg, var(--secondary-blue), var(--primary-blue));
     box-shadow: 0 0 15px rgba(0, 210, 255, 0.4);
-    z-index: 10; /* Siempre por encima */
+    z-index: 10;
 }
 
 .ghost-button {
@@ -188,49 +158,28 @@ button {
     z-index: 5;
 }
 
-/* Animación de Latido */
+/* Animación de Latido (CORREGIDA: No usa transform para no chocar con el JS) */
 .heartbeat {
-    animation: heartbeat 1.5s infinite;
+    animation: heartbeat 1.5s infinite ease-in-out;
 }
 
 @keyframes heartbeat {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
+    0%, 100% { filter: brightness(1); box-shadow: 0 0 15px rgba(0, 210, 255, 0.4); }
+    50% { filter: brightness(1.3); box-shadow: 0 0 30px rgba(0, 210, 255, 0.8); }
 }
 
-/* --- Recuerdos --- */
+/* --- Cuadrícula de Recuerdos --- */
 .modules-grid {
     display: flex;
     flex-wrap: wrap;
     gap: 25px;
     justify-content: center;
-    max-width: 1000px;
-}
-
-@media (max-width: 480px) {
-    .main-title { font-size: 2.2rem; }
-    .sub-title { font-size: 1.1rem; }
-    
-    .buttons-container {
-        flex-direction: column; /* Botones uno sobre otro en cel pequeño */
-        gap: 15px;
-        width: 100%;
-    }
-
-    button {
-        width: 80%; /* Botones más fáciles de tocar */
-        padding: 12px;
-    }
-
-    .memory-card {
-        flex: 1 1 100%; /* Una carta por fila en móvil */
-        max-width: 100%;
-    }
+    max-width: 1100px;
+    margin-top: 20px;
 }
 
 .memory-card {
-    position: relative; /* Necesario para posicionar el fondo */
+    position: relative;
     flex: 1 1 280px;
     max-width: 320px;
     min-height: 350px;
@@ -240,14 +189,10 @@ button {
     align-items: center;
     justify-content: center;
     text-align: center;
-    
-    /* Arreglo de bordes */
     border-radius: 25px;
     border: 1px solid var(--glass-border);
-    overflow: hidden; /* Corta cualquier cosa que se salga de las esquinas */
-    background: var(--glass-bg); /* Color de respaldo */
-    
-    /* Animación */
+    overflow: hidden;
+    background: var(--glass-bg);
     opacity: 0;
     transform: translateY(30px);
     animation: fadeInUp 0.8s forwards ease-out;
@@ -256,74 +201,65 @@ button {
 .memory-card::before {
     content: "";
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    
-    /* Aquí va la imagen (la hereda de la clase específica abajo) */
+    top: 0; left: 0; right: 0; bottom: 0;
     background-image: var(--bg-image); 
     background-size: cover;
     background-position: center;
-    
-    /* Difuminado y oscurecimiento */
-    filter: blur(4px) brightness(0.5); /* Ajusta el 4px a tu gusto */
-    transform: scale(1.1); /* Evita bordes blancos al difuminar */
+    filter: blur(4px) brightness(0.5);
+    transform: scale(1.1);
     z-index: 0;
-}
-
-/* Asegurar que el contenido esté por encima del fondo */
-.card-icon, .memory-card h3, .memory-card p {
-    position: relative;
-    z-index: 1;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.5); /* Mejora legibilidad */
-}
-
-.card-foto-1 { 
-    --bg-image: url('../img/IMG_0008.JPG'); 
-}
-
-.card-foto-2 {
-    --bg-image: url('../img/1f80cc47-0460-40d7-87d8-4ce9f06a99a8.jpeg');
-}
-
-.card-foto-3 {
-    --bg-image: url('../img/9-9.jpeg'); 
-}
-
-.card-foto-4 {
-    --bg-image: url('../img/b45d907b-5253-49c8-a5a5-d3ecfab99317.JPG');
-}
-
-.memory-card:hover {
-    background-image: linear-gradient(rgba(10, 17, 40, 0.4), rgba(0, 0, 0, 0.6));
-}
-
-.memory-card h3 {
-    margin-top: 10px;
-    margin-bottom: 15px;
-}
-
-.memory-card p {
-    line-height: 1.6; 
-}
-
-.memory-card h3, 
-.memory-card p {
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-    z-index: 2;
+    transition: all 0.5s ease;
 }
 
 .memory-card:hover::before {
     filter: blur(0px) brightness(0.7);
     transform: scale(1.0);
-    transition: all 0.5s ease;
 }
 
+.card-content {
+    position: relative;
+    z-index: 2;
+}
+
+.memory-card h3, .memory-card p {
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.9);
+    margin-bottom: 10px;
+}
+
+/* --- Imágenes de las Cartas --- */
+.card-foto-1 { --bg-image: url('../img/IMG_0008.JPG'); }
+.card-foto-2 { --bg-image: url('../img/1f80cc47-0460-40d7-87d8-4ce9f06a99a8.jpeg'); } /* Ajusta nombres si es necesario */
+.card-foto-3 { --bg-image: url('../img/9-9.jpeg'); }
+.card-foto-4 { --bg-image: url('../img/b45d907b-5253-49c8-a5a5-d3ecfab99317.JPG'); }
+
+/* --- Animaciones de Retraso --- */
 .delay-1 { animation-delay: 0.2s; }
 .delay-2 { animation-delay: 0.4s; }
 .delay-3 { animation-delay: 0.6s; }
 .delay-4 { animation-delay: 0.8s; }
 
+@keyframes fadeInUp {
+    to { opacity: 1; transform: translateY(0); }
+}
 
-@keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+/* --- Media Queries (Móvil) --- */
+@media (max-width: 480px) {
+    .main-title { font-size: 2.2rem; }
+    .sub-title { font-size: 1.1rem; margin-bottom: 1.5rem; }
+    
+    .buttons-container {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    button {
+        width: 100%;
+        max-width: 250px;
+    }
+
+    .memory-card {
+        flex: 1 1 100%;
+        min-height: 300px;
+    }
+}
+
