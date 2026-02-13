@@ -109,7 +109,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 30px;
+    padding: 20px;
     transition: opacity 0.8s ease-in-out;
 }
 
@@ -208,6 +208,27 @@ button {
     max-width: 1000px;
 }
 
+@media (max-width: 480px) {
+    .main-title { font-size: 2.2rem; }
+    .sub-title { font-size: 1.1rem; }
+    
+    .buttons-container {
+        flex-direction: column; /* Botones uno sobre otro en cel pequeño */
+        gap: 15px;
+        width: 100%;
+    }
+
+    button {
+        width: 80%; /* Botones más fáciles de tocar */
+        padding: 12px;
+    }
+
+    .memory-card {
+        flex: 1 1 100%; /* Una carta por fila en móvil */
+        max-width: 100%;
+    }
+}
+
 .memory-card {
     position: relative; /* Necesario para posicionar el fondo */
     flex: 1 1 280px;
@@ -303,5 +324,6 @@ button {
 .delay-2 { animation-delay: 0.4s; }
 .delay-3 { animation-delay: 0.6s; }
 .delay-4 { animation-delay: 0.8s; }
+
 
 @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
