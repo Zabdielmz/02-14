@@ -29,6 +29,33 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }, { once: true });
 
+    const hacerTrampa = (e) => {
+        // Evitar que el botón se presione accidentalmente en móviles
+        if (e.type === 'touchstart') e.preventDefault();
+
+        // Sonido de error
+        sndError.currentTime = 0;
+        sndError.play();
+
+        clickCount++;
+
+        // Crecer el botón SI
+        const scale = 1 + (clickCount * 0.3);
+        btnYes.style.transform = `scale(${scale})`;
+
+        // En móvil, en lugar de margen derecho (que saca el botón de la pantalla),
+        // usamos margen superior/inferior si es necesario.
+        if(window.innerWidth < 480) {
+            btnYes.style.marginBottom = `${clickCount * 20}px`;
+        } else {
+            btnYes.style.marginRight = `${clickCount * 30}px`;
+        }
+
+        // Cambiar texto
+        const frases = ["¿Segura?", "Piénsalo...", "¡Oye!", "Nop 😜", "Imposible"];
+        btnNo.textContent = frases[Math.min(clickCount, frases.length - 1)];
+    };
+    
     // --- Lógica del SÍ ---
     btnYes.addEventListener('click', () => {
         let fadeOut = setInterval(() => {
@@ -145,3 +172,4 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 200);
     });
 });
+
