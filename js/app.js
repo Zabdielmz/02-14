@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
         "YAAAAAA"
     ];
 
-    document.body.addEventListener('click', () => {
+    document.body.addEventListener('touchstart', () => {
         if(introMusic.paused) {
             introMusic.volume = 0.3; // Volumen suave para la intro
             introMusic.play();
@@ -65,6 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Lógica del NO (Persuasión sin superposición) ---
     const hacerTrampa = () => {
+        if (e.type === 'touchstart') e.preventDefault();
         sndError.currentTime = 0; // Reinicia el sonido si ya estaba sonando
         sndError.volume = 0.4;    // Volumen un poco más bajo que la música
         sndError.play().catch(e => console.log("Sonido bloqueado temporalmente"));
@@ -74,6 +75,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const escalaBase = 1 + (clickCount * 0.35); 
         btnYes.style.transform = `scale(${escalaBase})`;
 
+        if(window.innerWidth < 480) {
+            btnYes.style.marginBottom = `${clickCount * 20}px`;
+        } else {
+            btnYes.style.marginRight = `${clickCount * 30}px`;
+        }
+        
         // 2. NUEVO: Añadir MARGEN FÍSICO para empujar al otro botón
         // Cuantos más clicks, más margen a la derecha del botón SÍ
         const nuevoMargen = clickCount * 40; // 40px extra por cada interacción
@@ -102,8 +109,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Eventos para el botón NO
     btnNo.addEventListener('mouseover', hacerTrampa);
-    btnNo.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        hacerTrampa();
+    btnNo.addEventListener('touchstart', hacerTrampa);
+
+    btnYes.addEventListener('click', () => {
+        // Fade out intro, Fade in principal
+        let vol = 0.2;
+        const fadeOut = setInterval(() => {
+            if (vol > 0) {
+                vol -= 0.02;
+                introMusic.volume = Math.max(0, vol);
+            } else {
+                introMusic.pause();
+                clearInterval(fadeOut);
+            }
+        }, 50);
+
+        document.getElementById('welcome-screen').classList.add('hidden');
+        document.getElementById('memories-screen').classList.remove('hidden');
+        
+        // Scroll habilitado para ver los recuerdos
+        document.body.style.overflow = 'auto';
+        document.documentElement.style.overflow = 'auto';
+
+        bgMusic.volume = 0;
+        bgMusic.play();
+        // Fade in
+        let volIn = 0;
+        const fadeIn = setInterval(() => {
+            if (volIn < 0.5) {
+                volIn += 0.05;
+                bgMusic.volume = volIn;
+            } else {
+                clearInterval(fadeIn);
+            }
+        }, 200);
     });
 });
