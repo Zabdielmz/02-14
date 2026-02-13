@@ -22,101 +22,42 @@ document.addEventListener('DOMContentLoaded', () => {
         "YAAAAAA"
     ];
 
+    // Iniciar música de intro al primer toque (Permiso del navegador)
     document.body.addEventListener('touchstart', () => {
         if(introMusic.paused) {
-            introMusic.volume = 0.3; // Volumen suave para la intro
+            introMusic.volume = 0.3;
             introMusic.play();
         }
     }, { once: true });
 
+    // --- FUNCIÓN ÚNICA PARA EL BOTÓN NO ---
     const hacerTrampa = (e) => {
-        // Evitar que el botón se presione accidentalmente en móviles
-        if (e.type === 'touchstart') e.preventDefault();
+        // Prevenir comportamiento por defecto en móviles
+        if (e && e.type === 'touchstart') e.preventDefault();
 
         // Sonido de error
-        sndError.currentTime = 0;
-        sndError.play();
-
-        clickCount++;
-
-        // Crecer el botón SI
-        const scale = 1 + (clickCount * 0.3);
-        btnYes.style.transform = `scale(${scale})`;
-
-        // En móvil, en lugar de margen derecho (que saca el botón de la pantalla),
-        // usamos margen superior/inferior si es necesario.
-        if(window.innerWidth < 480) {
-            btnYes.style.marginBottom = `${clickCount * 20}px`;
-        } else {
-            btnYes.style.marginRight = `${clickCount * 30}px`;
+        if (sndError) {
+            sndError.currentTime = 0;
+            sndError.volume = 0.4;
+            sndError.play().catch(err => console.log("Audio bloqueado"));
         }
 
-        // Cambiar texto
-        const frases = ["¿Segura?", "Piénsalo...", "¡Oye!", "Nop 😜", "Imposible"];
-        btnNo.textContent = frases[Math.min(clickCount, frases.length - 1)];
-    };
-    
-    // --- Lógica del SÍ ---
-    btnYes.addEventListener('click', () => {
-        let fadeOut = setInterval(() => {
-            if (introMusic.volume > 0.05) {
-                introMusic.volume -= 0.05;
-            } else {
-                introMusic.pause();
-                clearInterval(fadeOut);
-            }
-        }, 100);
-
-        welcomeScreen.style.opacity = '0';
-        setTimeout(() => {
-        welcomeScreen.classList.add('hidden');
-        memoriesScreen.classList.remove('hidden');
-
-        // --- EFECTO FADE-IN DE MÚSICA ---
-        bgMusic.volume = 0; // Empezamos en silencio total
-        bgMusic.play().then(() => {
-            // Subir el volumen gradualmente cada 200 milisegundos
-            let fadeAudio = setInterval(() => {
-                // Si el volumen es menor a 0.5 (o el máximo que quieras)
-                if (bgMusic.volume < 0.5) {
-                    bgMusic.volume = Math.min(0.5, bgMusic.volume + 0.05);
-                } else {
-                    // Cuando llega al volumen deseado, detenemos el intervalo
-                    clearInterval(fadeAudio);
-                }
-            }, 100); // Velocidad del incremento
-        }).catch(e => console.log("Error al reproducir:", e));
-
-    }, 800);
-    });
-
-    // --- Lógica del NO (Persuasión sin superposición) ---
-    const hacerTrampa = () => {
-        if (e.type === 'touchstart') e.preventDefault();
-        sndError.currentTime = 0; // Reinicia el sonido si ya estaba sonando
-        sndError.volume = 0.4;    // Volumen un poco más bajo que la música
-        sndError.play().catch(e => console.log("Sonido bloqueado temporalmente"));
         clickCount++;
 
-        // 1. Aumentar el tamaño VISUAL del botón SÍ
+        // 1. Aumentar el tamaño del botón SÍ
         const escalaBase = 1 + (clickCount * 0.35); 
         btnYes.style.transform = `scale(${escalaBase})`;
 
+        // 2. Empuje físico para que no se encimen
         if(window.innerWidth < 480) {
-            btnYes.style.marginBottom = `${clickCount * 20}px`;
+            btnYes.style.marginBottom = `${clickCount * 25}px`;
         } else {
-            btnYes.style.marginRight = `${clickCount * 30}px`;
+            btnYes.style.marginRight = `${clickCount * 40}px`;
         }
-        
-        // 2. NUEVO: Añadir MARGEN FÍSICO para empujar al otro botón
-        // Cuantos más clicks, más margen a la derecha del botón SÍ
-        const nuevoMargen = clickCount * 40; // 40px extra por cada interacción
-        btnYes.style.marginRight = `${nuevoMargen}px`;
 
-        // 3. Mover un poco el botón NO para que sea juguetón
+        // 3. Mover un poco el botón NO
         const x = Math.random() * 30 - 15;
         const y = Math.random() * 30 - 15;
-        // Aplicamos el movimiento sutil
         btnNo.style.transform = `translate(${x}px, ${y}px)`;
 
         // 4. Cambiar el texto del botón NO
@@ -128,48 +69,49 @@ document.addEventListener('DOMContentLoaded', () => {
             btnNo.style.pointerEvents = "none"; 
         }
 
-        // 5. Latido si es muy grande
+        // 5. Agregar latido si es muy grande
         if (clickCount > 4) {
             btnYes.classList.add('heartbeat');
         }
     };
 
-    // Eventos para el botón NO
+    // --- ASIGNACIÓN DE EVENTOS AL NO ---
     btnNo.addEventListener('mouseover', hacerTrampa);
     btnNo.addEventListener('touchstart', hacerTrampa);
 
+    // --- LÓGICA DEL SÍ ---
     btnYes.addEventListener('click', () => {
-        // Fade out intro, Fade in principal
-        let vol = 0.2;
-        const fadeOut = setInterval(() => {
-            if (vol > 0) {
-                vol -= 0.02;
-                introMusic.volume = Math.max(0, vol);
+        // Fade out música de intro
+        let fadeOut = setInterval(() => {
+            if (introMusic.volume > 0.05) {
+                introMusic.volume -= 0.05;
             } else {
                 introMusic.pause();
                 clearInterval(fadeOut);
             }
-        }, 50);
+        }, 100);
 
-        document.getElementById('welcome-screen').classList.add('hidden');
-        document.getElementById('memories-screen').classList.remove('hidden');
-        
-        // Scroll habilitado para ver los recuerdos
-        document.body.style.overflow = 'auto';
-        document.documentElement.style.overflow = 'auto';
+        // Cambio de pantalla
+        welcomeScreen.style.opacity = '0';
+        setTimeout(() => {
+            welcomeScreen.classList.add('hidden');
+            memoriesScreen.classList.remove('hidden');
 
-        bgMusic.volume = 0;
-        bgMusic.play();
-        // Fade in
-        let volIn = 0;
-        const fadeIn = setInterval(() => {
-            if (volIn < 0.5) {
-                volIn += 0.05;
-                bgMusic.volume = volIn;
-            } else {
-                clearInterval(fadeIn);
-            }
-        }, 200);
+            // Scroll habilitado para ver recuerdos
+            document.body.style.overflow = 'auto';
+            document.documentElement.style.overflow = 'auto';
+
+            // Fade in música de fondo
+            bgMusic.volume = 0;
+            bgMusic.play().then(() => {
+                let fadeAudio = setInterval(() => {
+                    if (bgMusic.volume < 0.5) {
+                        bgMusic.volume = Math.min(0.5, bgMusic.volume + 0.05);
+                    } else {
+                        clearInterval(fadeAudio);
+                    }
+                }, 150);
+            }).catch(e => console.log("Error de audio:", e));
+        }, 800);
     });
 });
-
