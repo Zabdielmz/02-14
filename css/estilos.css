@@ -196,6 +196,7 @@ button {
     opacity: 0;
     transform: translateY(30px);
     animation: fadeInUp 0.8s forwards ease-out;
+    color: white;
 }
 
 .memory-card::before {
@@ -224,6 +225,7 @@ button {
 .memory-card h3, .memory-card p {
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.9);
     margin-bottom: 10px;
+    z-index: 5;
 }
 
 /* --- Imágenes de las Cartas --- */
@@ -262,4 +264,5 @@ button {
         min-height: 300px;
     }
 }
+
 
